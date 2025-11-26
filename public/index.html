@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Generator - Convert PDFs & Notes to Quizzes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar" id="navbar">
+            <div class="nav-container">
+                <h1 class="logo">📚 QuizGen</h1>
+                <div class="nav-links" id="navLinks">
+                    <a href="#" id="dashboardLink" class="nav-link" style="display: none;">Dashboard</a>
+                    <a href="#" id="createLink" class="nav-link" style="display: none;">Create Quiz</a>
+                    <div class="user-menu" id="userMenu" style="display: none;">
+                        <button class="user-menu-btn" id="userMenuBtn">
+                            <span id="usernameDisplay">User</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="#" id="logoutLink" class="dropdown-item">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Login Page -->
+        <div id="authSection" class="login-page" style="display: none;">
+            <div class="login-container">
+                <div class="login-header">
+                    <h1 class="login-logo">📚 QuizGen</h1>
+                    <p class="login-subtitle">Convert PDFs & Notes into Interactive Quizzes</p>
+                </div>
+                
+                <div class="auth-container">
+                    <div class="auth-tabs">
+                        <button class="tab-btn active" data-tab="login">Login</button>
+                        <button class="tab-btn" data-tab="signup">Sign Up</button>
+                    </div>
+
+                    <!-- Login Form -->
+                    <div id="loginTab" class="auth-tab active">
+                        <h2>Welcome Back</h2>
+                        <p class="form-subtitle">Sign in to continue to your quizzes</p>
+                        <form id="loginForm">
+                            <div class="form-group">
+                                <label for="loginId">Username</label>
+                                <input type="text" id="loginId" placeholder="Enter your username" required autocomplete="username">
+                            </div>
+                            <div class="form-group">
+                                <label for="loginPassword">Password</label>
+                                <input type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-large">Login</button>
+                        </form>
+                        <div id="authError" class="error-message"></div>
+                    </div>
+
+                    <!-- Signup Form -->
+                    <div id="signupTab" class="auth-tab">
+                        <h2>Create Account</h2>
+                        <p class="form-subtitle">Start creating quizzes in seconds</p>
+                        <form id="signupForm">
+                            <div class="form-group">
+                                <label for="signupId">Username</label>
+                                <input type="text" id="signupId" placeholder="Choose a username" required autocomplete="username">
+                            </div>
+                            <div class="form-group">
+                                <label for="signupPassword">Password</label>
+                                <input type="password" id="signupPassword" placeholder="Create a password" required autocomplete="new-password">
+                            </div>
+                            <div class="form-group">
+                                <label for="signupEmail">Email (optional)</label>
+                                <input type="email" id="signupEmail" placeholder="Enter your email" autocomplete="email">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-large">Sign Up</button>
+                        </form>
+                        <div id="signupError" class="error-message"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="section" style="display: none;">
+            <div class="container">
+                <h2>My Quizzes</h2>
+                <button id="newQuizBtn" class="btn btn-primary">+ Create New Quiz</button>
+                <div id="quizzesList" class="quizzes-grid"></div>
+            </div>
+        </div>
+
+        <!-- Create Quiz Section -->
+        <div id="createSection" class="section" style="display: none;">
+            <div class="container">
+                <div class="page-header">
+                    <button id="backFromCreateBtn" class="btn-back">← Back</button>
+                    <h2>Create Quiz from PDF or Notes</h2>
+                </div>
+                
+                <div class="create-options">
+                    <div class="option-card">
+                        <h3>📄 Upload PDF</h3>
+                        <input type="file" id="pdfFile" accept=".pdf" style="display: none;">
+                        <button type="button" id="choosePdfBtn" class="btn btn-secondary">Choose PDF</button>
+                        <div id="pdfFileName" class="file-name"></div>
+                    </div>
+                    
+                    <div class="option-card">
+                        <h3>📝 Paste Notes</h3>
+                        <textarea id="notesText" placeholder="Paste your notes here..." rows="10"></textarea>
+                    </div>
+                </div>
+
+                <div class="quiz-settings">
+                    <div class="form-group">
+                        <label for="quizTitle">Quiz Title (optional)</label>
+                        <input type="text" id="quizTitle" placeholder="Enter quiz title">
+                    </div>
+                    <div class="form-group">
+                        <label for="numQuestions">Number of Questions</label>
+                        <input type="number" id="numQuestions" value="5" min="1" max="20">
+                    </div>
+                </div>
+
+                <button id="generateQuizBtn" class="btn btn-primary btn-large">Generate Quiz</button>
+                <div id="generateStatus" class="status-message"></div>
+            </div>
+        </div>
+
+        <!-- Quiz Taking Section -->
+        <div id="quizSection" class="section" style="display: none;">
+            <div class="container">
+                <h2 id="quizTitleDisplay"></h2>
+                <div id="quizStatus" class="status-message"></div>
+                <div id="quizQuestions"></div>
+                <button id="submitQuizBtn" class="btn btn-primary btn-large">Submit Quiz</button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="section" style="display: none;">
+            <div class="container">
+                <h2>Quiz Results</h2>
+                <div id="scoreDisplay" class="score-display"></div>
+                <div id="resultsDetails"></div>
+                <button id="backToDashboardBtn" class="btn btn-secondary">Back to Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
