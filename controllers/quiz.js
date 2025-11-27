@@ -43,7 +43,7 @@ const upload = multer({
 // Ollama configuration
 const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.1'; // Default model, can be changed
-const USE_OLLAMA = process.env.USE_OLLAMA !== 'false'; // Default to true, set to 'false' to disable
+const USE_OLLAMA = process.env.USE_OLLAMA !== 'true'; // Default to true, set to 'false' to disable
 
 /**
  * Extract text from PDF
